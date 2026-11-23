@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toronto Prêt — Organisateur d'immigration</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="leaf" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8l2 4.9 3.7-1.7-1.1 4.2 4.6.6-3.1 3.1 2.6 3.4-4.6-.7.3 4.7-3.1-3-3.1 3 .3-4.7-4.6.7 2.6-3.4-3.1-3.1 4.6-.6-1.1-4.2 3.7 1.7z"/></svg>
+      <div>
+        <h1>Toronto Prêt</h1>
+        <p>Votre immigration à Toronto, organisée étape par étape</p>
+      </div>
+    </div>
+    <nav class="tabs" id="nav">
+      <button type="button" data-action="nav" data-view="dashboard" class="active">Tableau de bord</button>
+      <button type="button" data-action="nav" data-view="tasks">Tâches</button>
+      <button type="button" data-action="nav" data-view="docs">Documents</button>
+      <button type="button" data-action="nav" data-view="calendar">Calendrier</button>
+      <button type="button" data-action="nav" data-view="budget">Budget</button>
+      <button type="button" data-action="nav" data-view="resources">Ressources</button>
+      <button type="button" data-action="nav" data-view="settings">Paramètres</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="view active" id="view-dashboard">
+      <div id="dash-greeting" class="card greeting"></div>
+      <div class="stats" id="dash-stats"></div>
+      <div class="dash-grid">
+        <div class="card"><h2>Progression par phase</h2><div id="dash-phases"></div></div>
+        <div class="card"><h2>Prochaines échéances</h2><div id="dash-events"></div></div>
+        <div class="card"><h2>Documents à surveiller</h2><div id="dash-docs"></div></div>
+        <div class="card"><h2>Budget</h2><div id="dash-budget"></div></div>
+      </div>
+      <div class="card">
+        <h2>Actions rapides</h2>
+        <div class="quick-btns">
+          <button type="button" class="btn" data-action="goto" data-view="tasks">+ Ajouter une tâche</button>
+          <button type="button" class="btn" data-action="goto" data-view="docs">+ Ajouter un document</button>
+          <button type="button" class="btn" data-action="goto" data-view="calendar">+ Ajouter une échéance</button>
+          <button type="button" class="btn" data-action="goto" data-view="budget">+ Ajouter une ligne budgétaire</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-tasks">
+      <form id="task-form" class="card form-row">
+        <input id="task-label" type="text" placeholder="Nouvelle tâche…" required />
+        <select id="task-phase"></select>
+        <button class="btn primary" type="submit">Ajouter</button>
+      </form>
+      <div id="task-phases"></div>
+    </section>
+
+    <section class="view" id="view-docs">
+      <form id="doc-form" class="card form-grid">
+        <input id="doc-name" type="text" placeholder="Nom du document" required />
+        <select id="doc-type"></select>
+        <select id="doc-status"></select>
+        <label class="field-inline">Expiration
+          <input id="doc-expiry" type="date" />
+        </label>
+        <input id="doc-notes" type="text" placeholder="Notes (optionnel)" />
+        <button class="btn primary" type="submit">Ajouter</button>
+      </form>
+      <div id="doc-list" class="doc-grid"></div>
+    </section>
+
+    <section class="view" id="view-calendar">
+      <form id="event-form" class="card form-row">
+        <input id="event-title" type="text" placeholder="Titre de l'échéance" required />
+        <input id="event-date" type="date" required />
+        <input id="event-note" type="text" placeholder="Notes (optionnel)" />
+        <button class="btn primary" type="submit">Ajouter</button>
+      </form>
+      <div id="event-list" class="card-list"></div>
+    </section>
+
+    <section class="view" id="view-budget">
+      <form id="budget-form" class="card form-row">
+        <input id="budget-label" type="text" placeholder="Poste de dépense" required />
+        <input id="budget-planned" type="number" min="0" step="50" placeholder="Prévu ($)" />
+        <input id="budget-spent" type="number" min="0" step="50" placeholder="Dépensé ($)" />
+        <button class="btn primary" type="submit">Ajouter</button>
+      </form>
+      <div class="card">
+        <h2>Budget (en dollars canadiens)</h2>
+        <p class="hint">Les montants pré-remplis sont des estimations à adapter à votre situation ; consultez le barème officiel des frais d'IRCC pour les montants exacts.</p>
+        <div class="progress big"><div id="budget-bar"></div></div>
+        <div class="table-wrap">
+          <table class="budget-table">
+            <thead><tr><th>Poste</th><th>Prévu</th><th>Dépensé</th><th>Restant</th><th></th></tr></thead>
+            <tbody id="budget-body"></tbody>
+            <tfoot id="budget-totals"></tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-resources">
+      <div class="card form-row">
+        <label class="field-inline" for="res-filter">Filtrer :</label>
+        <select id="res-filter"></select>
+      </div>
+      <div id="res-list" class="res-grid"></div>
+    </section>
+
+    <section class="view" id="view-settings">
+      <div class="card settings-card">
+        <h2>Votre situation</h2>
+        <label class="field"><span>Date de départ prévue</span><input id="set-departure" type="date" /></label>
+        <label class="field"><span>Voie d'immigration envisagée</span><select id="set-pathway"></select></label>
+      </div>
+      <div class="card settings-card">
+        <h2>Vos données</h2>
+        <p class="hint">Toutes vos données restent dans ce navigateur (stockage local). Rien n'est envoyé sur Internet.</p>
+        <div class="quick-btns">
+          <button type="button" class="btn" data-action="export">Exporter mes données (JSON)</button>
+          <label class="btn file-btn">Importer un fichier JSON<input id="import-file" type="file" accept="application/json,.json" hidden /></label>
+          <button type="button" class="btn danger" data-action="reset">Réinitialiser l'application</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Données stockées localement dans votre navigateur — aucun compte requis. Cette application ne constitue pas un conseil juridique ni en immigration : vérifiez toujours les exigences à jour sur canada.ca et ontario.ca.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
